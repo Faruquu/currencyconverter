@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter 💰</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #11998e, #38ef7d);
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    .box {
+      background: rgba(255,255,255,0.2);
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
+      margin: 0 auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      width: 80%;
+      margin: 5px 0;
+    }
+    button {
+      background: #222;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #444;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💰 Currency Converter</h1>
+
+  <div class="box">
+    <input type="number" id="amount" placeholder="Amount">
+    <br>
+    <select id="from">
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+      <option value="NGN">NGN</option>
+      <option value="JPY">JPY</option>
+    </select>
+    <br>
+    <select id="to">
+      <option value="NGN">NGN</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+      <option value="JPY">JPY</option>
+    </select>
+    <br>
+    <button onclick="convertCurrency()">Convert</button>
+    <div id="result"></div>
+
+  </div>
+
+  <script>
+    async function convertCurrency() {
+  const amount = document.getElementById("amount").value;
+  const from = document.getElementById("from").value;
+  const to = document.getElementById("to");
+  const result = document.getElementById("result");
+  const apiKey = "6c56455a87f5c7c8a5e8ccee"; 
+
+  if (amount === "") {
+    result.innerHTML = "<p>Please enter an amount 💵</p>";
+    return; 
+  }
+
+  result.innerHTML = "Converting...";
+
+  try {
+    
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/pair/${from}/${to}/${amount}`);
+
+    
+    const data = await response.json();
+
+    if (data.result === "success") {
+      result.innerHTML = `<p>${amount} ${from} = <strong>${data.conversion_result.toFixed(2)} ${to}</strong></p>`;
+    } else {
+      result.innerHTML = "<p>Invalid conversion 😢</p>";
+    }
+  } catch (error) {
+    // Handles any network or API errors
+    result.innerHTML = "<p>Something went wrong 😢</p>";
+  }
+}
+  </script>
+
+</body>
+</html>
