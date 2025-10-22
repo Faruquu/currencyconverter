@@ -70,43 +70,40 @@
     <br>
     <button onclick="convertCurrency()">Convert</button>
     <div id="result"></div>
-
+     <div id="rate"></div>
   </div>
 
   <script>
-    async function convertCurrency() {
-  const amount = document.getElementById("amount").value;
-  const from = document.getElementById("from").value;
-  const to = document.getElementById("to").value;
-  const result = document.getElementById("result").value;
-  const apiKey = "6c56455a87f5c7c8a5e8ccee"; 
+    function convertCurrency() {
+      const amount = document.getElementById("amount").value;
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+      const result = document.getElementById("result");
+      const rate = document.getElementById("rate");
+      const apiKey = "6c56455a87f5c7c8a5e8ccee";
 
-  if (amount === "") {
-    result.innerHTML = "<p>Please enter an amount 💵</p>";
-    return; 
-  }
+      if (amount === "") {
+        result.innerHTML = "<p>Please enter an amount 💵</p>";
+        return;
+      } else{
 
-  result.innerHTML = "Converting...";
+      result.innerHTML = "Converting...";
 
-  try {
-    
-    const response = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/pair/${from}/${to}/${amount}`);
-
-    
-    const data = await response.json();
-
-    if (data.result === "success") {
-      result.innerHTML = `<p>${amount} ${from} = <strong>${data.conversion_result.toFixed(2)} ${to}</strong></p>`;
-    } else {
-      result.innerHTML = "<p>Invalid conversion 😢</p>";
-    }
-  } catch (error) {
-    // Handles any network or API errors
-    result.innerHTML = "<p>Something went wrong 😢</p>";
-  }
-}
+      fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/pair/${from}/${to}/${amount}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.result === "success") {
+            result.innerHTML = `<p>${amount} ${from} = <strong>${data.conversion_result.toFixed(2)} ${to}</strong></p>`;
+            rate.innerHTML = `<p>Conversion Rate From ${from} to  ${to} = <strong> 1 ${from} = ${data.conversion_rate.toFixed(2)} ${to}</strong></p>`;
+          } else {
+            result.innerHTML = "<p>Invalid conversion 😢</p>";
+          }
+        })
+        .catch(() => {
+          result.innerHTML = "<p>Something went wrong 😢</p>";
+        });
+    }}
   </script>
 
 </body>
-
 </html>
